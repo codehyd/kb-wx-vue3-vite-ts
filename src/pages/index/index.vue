@@ -1,7 +1,13 @@
 <template>
-  <view> </view>
+  <view class="page-index">
+    <work-list></work-list>
+  </view>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import WorkList from "./cpns/work-list.vue";
+</script>
 
-<style scoped></style>
+<style lang="less" scoped>
+@import "./css/index.less";
+</style>

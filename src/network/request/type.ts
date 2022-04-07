@@ -1,7 +1,11 @@
-export interface IRequestConfig {
-  baseUrl: string;
+export interface IInterceptors {
   isTaskBaseData?: boolean;
   isTaskTokenData?: boolean;
+  isShowLoading?: boolean;
+}
+
+export interface IRequestConfig extends IInterceptors {
+  baseUrl: string;
 }
 
 export interface IUniRequestOptions {
@@ -25,8 +29,10 @@ export interface IUniRequestOptions {
   firstIpv4?: boolean;
   success?: (result: RequestSuccessCallbackResult) => void;
   fail?: (result: GeneralCallbackResult) => void;
-
   complete?: (result: GeneralCallbackResult) => void;
+
+  // 拦截器
+  interceptors?: IInterceptors;
 }
 
 export interface RequestSuccessCallbackResult {

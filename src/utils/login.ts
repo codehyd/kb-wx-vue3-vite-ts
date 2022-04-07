@@ -1,4 +1,13 @@
 class login {
+  getLoginCode() {
+    return new Promise<string>((resolve) => {
+      uni.login({
+        success: (result) => {
+          resolve(result.code);
+        },
+      });
+    });
+  }
   getUserInfo() {
     return new Promise<any>((resolve, reject) => {
       uni.showLoading({

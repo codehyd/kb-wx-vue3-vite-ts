@@ -7,3 +7,9 @@ export interface IDataType<T = any> {
   msg: string;
   data: T;
 }
+
+export interface IBaseDataType {
+  timestamp: string;
+  sig: string;
+  qxid: string | number;
+}
