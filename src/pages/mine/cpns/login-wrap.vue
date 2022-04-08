@@ -75,14 +75,14 @@ const handleLoginClick = async () => {
       csname: "",
       uname: "",
     }).then((res) => {
+      uni.showToast({
+        title: res.msg,
+        icon: "none",
+        mask: true,
+      });
       if (res.code == 2) {
         store.commit("login/setAccount", res);
       } else {
-        uni.showToast({
-          title: res.msg,
-          icon: "none",
-          mask: true,
-        });
         setTimeout(() => {
           uni.navigateTo({ url: "/pages/login/index" });
         }, 1500);

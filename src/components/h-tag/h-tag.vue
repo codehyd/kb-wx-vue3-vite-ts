@@ -1,5 +1,6 @@
 <template>
   <view
+    @click="handleClick"
     class="h-tag"
     :class="[`h-tag-${mode}-${type}`, { 'is-cilcle': cilcle }]"
   >
@@ -24,6 +25,12 @@ const props = withDefaults(
     // text: "",
   }
 );
+
+const emit = defineEmits(["click"]);
+
+const handleClick = () => {
+  emit("click");
+};
 </script>
 
 <style lang="less" scoped>

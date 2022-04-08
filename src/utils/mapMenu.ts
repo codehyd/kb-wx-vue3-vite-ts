@@ -16,3 +16,40 @@ export function mapDefaultMenus(menus: any[], number = 8) {
   }
   return defaultMenus;
 }
+
+interface IClassMenusTypd {
+  icon: string;
+  id: number;
+  parent: string;
+  path: string;
+  showparent: string;
+  title: string;
+}
+export function mapClassMenus(menus: IClassMenusTypd[]) {
+  const classMenus: any[] = [];
+  menus.forEach((item) => {
+    const find = classMenus.find((i) => i.parent == item.parent);
+    if (!find) {
+      classMenus.push({
+        parent: item.parent,
+        title: item.showparent,
+        children: [
+          {
+            icon: item.icon,
+            id: item.id,
+            path: item.path,
+            title: item.title,
+          },
+        ],
+      });
+    } else {
+      find.children.push({
+        icon: item.icon,
+        id: item.id,
+        path: item.path,
+        title: item.title,
+      });
+    }
+  });
+  return classMenus;
+}

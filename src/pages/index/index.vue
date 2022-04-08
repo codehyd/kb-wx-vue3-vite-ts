@@ -1,11 +1,11 @@
 <template>
   <view class="page-index">
-    <work-list></work-list>
+    <page-work-list></page-work-list>
   </view>
 </template>
 
 <script setup lang="ts">
-import WorkList from "./cpns/work-list.vue";
+import PageWorkList from "./cpns/page-work-list.vue";
 </script>
 
 <style lang="less" scoped>

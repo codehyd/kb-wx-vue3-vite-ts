@@ -3,8 +3,7 @@ import { ILoginState } from "./type";
 import { IRootState } from "../type";
 
 import { httpLogin } from "@/network/service/mine";
-// import type { IAcccountType } from "@/network/service/mine";
-import { menusToUserMenus } from "@/utils/mapMenu";
+import { menusToUserMenus, mapDefaultMenus } from "@/utils/mapMenu";
 
 import Base64 from "@/utils/base64";
 
@@ -17,19 +16,24 @@ const login: Module<ILoginState, IRootState> = {
     menus: [],
   },
   mutations: {
+    // 设置token 路由菜单
     setAccount(state, accountInfo) {
       // 1. 保存token | 微信用户信息
       const token = Base64.objToEncode(accountInfo);
+      state.token = token;
       uni.setStorageSync("token", token);
       uni.setStorageSync("nickName", accountInfo.selfname);
       uni.setStorageSync("avatarUrl", accountInfo.avatarurl);
-      state.token = token;
       state.nickName = accountInfo.selfname;
       state.avatarUrl = accountInfo.avatarurl;
       // 2. 获取权限路由
       const menus = accountInfo.functions[0].data;
-      const userMenus = menusToUserMenus(menus);
-      console.log(userMenus);
+      state.menus = menus;
+    },
+
+    // 改变路由菜单
+    changeMenus(state, menus) {
+      state.menus = menus;
     },
   },
   actions: {

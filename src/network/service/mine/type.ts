@@ -11,3 +11,7 @@ export interface IAcccountType {
   uname: string;
   upwd?: string;
 }
+
+export interface IHttpsetPageAppType {
+  content?: any;
+}

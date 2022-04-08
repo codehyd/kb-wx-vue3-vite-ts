@@ -1,5 +1,8 @@
 import { IRequestConfig, IUniRequestOptions } from "./type";
-import { baseData as requestBaseData } from "../config";
+import {
+  baseData as requestBaseData,
+  tokenData as requestTokenData,
+} from "../config";
 
 class uniRequest {
   baseUrl: string;
@@ -18,11 +21,15 @@ class uniRequest {
     let isTaskBaseData =
       options.interceptors?.isTaskBaseData ?? this.isTaskBaseData ?? false;
 
+    let isTaskTokenData =
+      options.interceptors?.isTaskTokenData ?? this.isTaskTokenData ?? false;
+
     // 是否显示loading
     let isShowLoading =
       options.interceptors?.isShowLoading ?? this.isShowLoading ?? false;
 
     const baseData = isTaskBaseData ? requestBaseData() : {};
+    const tokenData = isTaskTokenData ? requestTokenData() : {};
     return new Promise((resolve, reject) => {
       if (isShowLoading) {
         uni.showLoading({
@@ -32,7 +39,7 @@ class uniRequest {
       }
       uni.request({
         url: this.baseUrl + options.url,
-        data: Object.assign(baseData, options.data),
+        data: Object.assign(baseData, tokenData, options.data),
         method: options.method ?? "GET",
         header: options.header ?? {},
         success: (res: any) => {
