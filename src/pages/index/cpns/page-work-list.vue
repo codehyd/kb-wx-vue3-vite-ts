@@ -1,88 +1,83 @@
 <template>
-  <view class="work-list">
+  <view class="page-work-list">
     <uni-grid :column="4" :showBorder="false">
       <template v-for="item in userMenus" :key="item.id">
         <uni-grid-item>
-          <view class="item" @click="handleMoreClick(item)">
+          <view class="item" @click="handleItemClick(item)">
             <image :src="item.icon" class="menuIcon"></image>
             <text class="text">{{ item.title }}</text>
           </view>
         </uni-grid-item>
       </template>
       <uni-grid-item>
-        <view class="item" @click="handleMoreClick(undefined)">
+        <view class="item" @click="handleMoreClick">
           <uni-icons type="more-filled" :size="30" color="#777" />
           <text class="text">更多</text>
         </view>
       </uni-grid-item>
     </uni-grid>
-    <mask-animation :isLoading="loading"></mask-animation>
   </view>
 </template>
 
 <script setup lang="ts">
 import { useStore } from "@/store";
-import MaskAnimation from "@/base-ui/mask-animation/mask-animation.vue";
 import useLoginHooks from "@/hooks/useLoginHooks";
 
 const store = useStore();
-const userMenus = computed(() => store.state.user.userMenus);
 const { isLogin } = useLoginHooks();
 
-const loading = ref(true);
+const userMenus = computed(() => store.state.user.userMenus);
 
-watchEffect(() => {
-  if (isLogin.value) {
-    store.dispatch("user/getUserMenus");
-    nextTick(() => {
-      setTimeout(() => {
-        loading.value = false;
-      }, 2000);
-    });
-  }
-});
-
-const handleMoreClick = (item: any) => {
-  if (!isLogin.value)
-    return uni.showToast({
+const handleItemClick = (item: any) => {
+  if (!isLogin.value) {
+    uni.showToast({
       title: "请先登录",
       icon: "none",
+      mask: true,
     });
-  // 路由跳转
-  if (item) {
-    console.log(item);
-    uni.navigateTo({
-      url: "/page-authority-chunk" + item.path + "/index",
-      fail: () => {
-        uni.showToast({
-          title: "跳转失败",
-          icon: "none",
-        });
-      },
-    });
+    return;
   }
-  // 跳转至更多
-  else {
-    uni.navigateTo({
-      url: "/page-authority-chunk/" + "work-list" + "/index",
+  uni.navigateTo({
+    url: "/page-authority-chunk" + item.path + "/index",
+    fail: () => {
+      uni.showToast({
+        title: "跳转失败",
+        icon: "none",
+        mask: true,
+      });
+    },
+  });
+};
+
+const handleMoreClick = () => {
+  if (!isLogin.value) {
+    uni.showToast({
+      title: "请先登录",
+      icon: "none",
+      mask: true,
     });
+    return;
   }
+  uni.navigateTo({
+    url: "/page-authority-chunk/work-list/index",
+  });
 };
 </script>
 
 <style lang="less" scoped>
-.work-list {
+.page-work-list {
   position: relative;
-}
-.item {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  .menuIcon {
-    width: 60rpx;
-    height: 60rpx;
+  margin: 0 20rpx;
+  .item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    .menuIcon {
+      width: 60rpx;
+      height: 60rpx;
+    }
   }
 }
 </style>

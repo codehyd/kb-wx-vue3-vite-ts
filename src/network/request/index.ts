@@ -9,24 +9,34 @@ class uniRequest {
   isTaskBaseData: boolean;
   isTaskTokenData: boolean;
   isShowLoading: boolean;
+  isAutoFormHeader: boolean;
 
   constructor(options: IRequestConfig) {
     this.baseUrl = options.baseUrl;
     this.isTaskBaseData = options.isTaskBaseData ?? false;
     this.isTaskTokenData = options.isTaskTokenData ?? false;
     this.isShowLoading = options.isShowLoading ?? false;
+    this.isAutoFormHeader = options.isAutoFormHeader ?? false;
   }
   request<T>(options: IUniRequestOptions): Promise<T> {
     // 是否包含basedata
     let isTaskBaseData =
       options.interceptors?.isTaskBaseData ?? this.isTaskBaseData ?? false;
-
+    // 是否包含tokendata
     let isTaskTokenData =
       options.interceptors?.isTaskTokenData ?? this.isTaskTokenData ?? false;
-
     // 是否显示loading
     let isShowLoading =
       options.interceptors?.isShowLoading ?? this.isShowLoading ?? false;
+    // 是否自动将post请求的data转换为请求头
+    let isAutoFormHeader =
+      options.interceptors?.isAutoFormHeader ?? this.isAutoFormHeader ?? false;
+
+    if (isAutoFormHeader && options.method === "POST") {
+      options.header = {
+        "content-type": "application/x-www-form-urlencoded",
+      };
+    }
 
     const baseData = isTaskBaseData ? requestBaseData() : {};
     const tokenData = isTaskTokenData ? requestTokenData() : {};

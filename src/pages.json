@@ -50,6 +50,17 @@
           }
         }
       ]
+    },
+    {
+      "root": "page-chunk",
+      "pages": [
+        {
+          "path": "notice-list/index",
+          "style": {
+            "navigationBarTitleText": "公告列表"
+          }
+        }
+      ]
     }
   ],
   "tabBar": {

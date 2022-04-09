@@ -6,6 +6,8 @@ import user from "./user";
 
 const store = createStore<IRootState>({
   state: {},
+
+  actions: {},
   modules: {
     login,
     user,
@@ -19,5 +21,6 @@ export function useStore(): Store<IStoreType> {
 }
 
 export const localSetup = () => {
-  store.dispatch("login/loaclSetup");
+  store.dispatch("login/setupLocation");
+  store.dispatch("user/setupLocation");
 };

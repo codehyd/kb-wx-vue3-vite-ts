@@ -2,9 +2,6 @@ import { Module } from "vuex";
 import { ILoginState } from "./type";
 import { IRootState } from "../type";
 
-import { httpLogin } from "@/network/service/mine";
-import { menusToUserMenus, mapDefaultMenus } from "@/utils/mapMenu";
-
 import Base64 from "@/utils/base64";
 
 const login: Module<ILoginState, IRootState> = {
@@ -16,12 +13,22 @@ const login: Module<ILoginState, IRootState> = {
     menus: [],
   },
   mutations: {
+    // 改变token
+    changeToken(state, token) {
+      state.token = token;
+    },
+
+    // 改变用户路由
+    changeMenus(state, menus) {
+      state.menus = menus;
+    },
+
     // 设置token 路由菜单
     setAccount(state, accountInfo) {
       // 1. 保存token | 微信用户信息
-      const token = Base64.objToEncode(accountInfo);
-      state.token = token;
-      uni.setStorageSync("token", token);
+      // const token = Base64.objToEncode(accountInfo);
+      state.token = accountInfo;
+      uni.setStorageSync("token", accountInfo);
       uni.setStorageSync("nickName", accountInfo.selfname);
       uni.setStorageSync("avatarUrl", accountInfo.avatarurl);
       state.nickName = accountInfo.selfname;
@@ -30,42 +37,41 @@ const login: Module<ILoginState, IRootState> = {
       const menus = accountInfo.functions[0].data;
       state.menus = menus;
     },
-
-    // 改变路由菜单
-    changeMenus(state, menus) {
-      state.menus = menus;
-    },
   },
   actions: {
-    accountLogin({ commit }, payload) {
-      httpLogin(payload).then((res) => {
-        if (res.code == 2) {
-          commit("setAccount", res);
-          uni.showLoading({
-            title: "跳转到首页中",
-            mask: true,
-          });
-          setTimeout(() => {
-            // 跳转到首页
-            uni.switchTab({
-              url: "/pages/index/index",
-            });
-            uni.hideLoading();
-          }, 1500);
-        } else {
-          uni.showToast({
-            title: res.msg,
-            icon: "none",
-          });
-        }
-      });
+    async accountLogin({ commit }, payload) {
+      // 1. 设置token | 微信用户信息
+      const token = Base64.objToEncode(payload);
+      uni.setStorageSync("token", token);
+      uni.setStorageSync("nickName", payload.selfname);
+      uni.setStorageSync("avatarUrl", payload.avatarurl);
+      commit("changeToken", token);
+
+      // 2. 获取所有动态路由
+      const autoMenus = payload.functions[0].data;
+      commit("changeMenus", autoMenus);
+
+      // 3. 获取用户下拉菜单
+
+      // 4. 获取公告
+
+      // 5. 获取用户菜单
+
+      // 6. 获取page-header数据
+
+      // 7. 获取todo-list列表
+
+      // ...
     },
 
-    loaclSetup({ commit }) {
+    setupLocation({ commit, dispatch }) {
       const token = uni.getStorageSync("token");
       if (token) {
+        commit("changeToken", token);
+
         const accountInfo = Base64.decodeToObj(token);
-        commit("setAccount", accountInfo);
+        const menus = accountInfo.functions[0].data;
+        commit("changeMenus", menus);
       }
     },
   },

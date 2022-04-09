@@ -43,18 +43,9 @@ const props = withDefaults(
 
 const emit = defineEmits(["item-click", "edit-click"]);
 
-const currentMenus = ref([...(props.menus ?? [])]);
-
-// const currentSettingCode = ref(false);
-
-const tagType = computed(() => {
-  if (props.flag) return "success";
-  return "primary";
-});
-const tagText = computed(() => {
-  if (props.flag) return "保存";
-  return "编辑";
-});
+const tagType = computed(() => (props.flag ? "success" : "primary"));
+const tagText = computed(() => (props.flag ? "保存" : "编辑"));
+const currentMenus = computed(() => [...(props.menus ?? [])]);
 
 const handleEditClick = () => {
   emit("edit-click", [...currentMenus.value]);
@@ -62,10 +53,7 @@ const handleEditClick = () => {
 
 const handleItemClick = (item: any) => {
   if (props.flag) {
-    currentMenus.value = currentMenus.value.filter(
-      (i: any) => i.id !== item.id
-    );
-    emit("item-click", [...currentMenus.value]);
+    emit("item-click", item);
   } else {
     uni.navigateTo({
       url: "/page-authority-chunk" + item.path + "/index",

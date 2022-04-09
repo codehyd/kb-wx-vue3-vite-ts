@@ -39,15 +39,15 @@ import login from "@/utils/login";
 import { httpLogin } from "@/network/service/mine";
 
 const store = useStore();
-const { isLogin, userInfo } = useLoginHooks();
+const { isLogin, userInfo, accountLogin } = useLoginHooks();
 
 const avatar = computed(() => userInfo.value?.avatarurl ?? "");
 
 const handleLoginClick = async () => {
   // 先判断是否已登录
   if (isLogin.value) {
-    return uni.navigateTo({ url: "/pages/login/index" });
     // 已登录
+    return uni.navigateTo({ url: "/pages/login/index" });
   } else {
     // 未登录
     // 1. 先判断是否有微信缓存信息
@@ -65,7 +65,7 @@ const handleLoginClick = async () => {
     }
 
     jscode = await login.getLoginCode();
-    httpLogin({
+    const data = {
       jscode,
       nickname,
       avatarurl,
@@ -74,27 +74,28 @@ const handleLoginClick = async () => {
       cnstr: "",
       csname: "",
       uname: "",
-    }).then((res) => {
-      uni.showToast({
-        title: res.msg,
-        icon: "none",
-        mask: true,
-      });
-      if (res.code == 2) {
-        store.commit("login/setAccount", res);
-      } else {
-        setTimeout(() => {
-          uni.navigateTo({ url: "/pages/login/index" });
-        }, 1500);
-      }
-    });
+    };
+    accountLogin(data);
+    // httpLogin().then((res) => {
+    //   uni.showToast({
+    //     title: res.msg,
+    //     icon: "none",
+    //     mask: true,
+    //   });
+    //   if (res.code == 2) {
+    //     store.commit("login/setAccount", res);
+    //   } else {
+    //     setTimeout(() => {
+    //       uni.navigateTo({ url: "/pages/login/index" });
+    //     }, 1500);
+    //   }
+    // });
   }
 };
 
 const handleSettingClick = () => {
   // 先判断是否登录
   if (isLogin.value) {
-    console.log(121);
     // uni.navigateTo({ url: "/pages/mine/setting/index" });
   } else {
     uni.navigateTo({ url: "/pages/login/index" });

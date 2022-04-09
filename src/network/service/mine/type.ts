@@ -1,4 +1,5 @@
 // import { IBaseDataType } from "../../type";
+import { IDataType } from "../../type";
 
 export interface IAcccountType {
   jscode: string;
@@ -14,4 +15,8 @@ export interface IAcccountType {
 
 export interface IHttpsetPageAppType {
   content?: any;
+}
+
+export interface IPageAppType extends IDataType {
+  content: any;
 }

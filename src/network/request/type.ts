@@ -2,6 +2,7 @@ export interface IInterceptors {
   isTaskBaseData?: boolean;
   isTaskTokenData?: boolean;
   isShowLoading?: boolean;
+  isAutoFormHeader?: boolean;
 }
 
 export interface IRequestConfig extends IInterceptors {

@@ -2,7 +2,7 @@
   <view class="total-work-list">
     <template v-for="(item, index) in totalList" :key="index">
       <view class="section is-bold">{{ item.title }}</view>
-      <uni-grid :column="4" :showBorder="false">
+      <uni-grid :column="5" :showBorder="false">
         <template v-for="childrenItem in item.children" :key="childrenItem.id">
           <uni-grid-item>
             <view class="item" @click="handleItemClick(childrenItem)">
@@ -56,8 +56,8 @@ const handleItemClick = (item: any) => {
     align-items: center;
     justify-content: center;
     .menuIcon {
-      width: 60rpx;
-      height: 60rpx;
+      width: 50rpx;
+      height: 50rpx;
     }
     .corner {
       position: absolute;

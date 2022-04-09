@@ -19,22 +19,52 @@ import CurrentWorkList from "./cpns/current-work-list.vue";
 import TotalWorkList from "./cpns/total-work-list.vue";
 import { useStore } from "@/store";
 const store = useStore();
-const currentMenus = computed(() => [...store.state.user.userMenus]);
+const currentMenus = ref([...store.state.user.userMenus]);
 
 const currentFlag = ref(false);
 
-let newMenus = [];
+let newMenus: any[] = [];
 
+// 监听保存按钮
 const handleSaveClick = (data: any) => {
   currentFlag.value = !currentFlag.value;
+  if (!currentFlag.value) {
+    currentMenus.value = data;
+    // 保存用户菜单
+    store.dispatch("user/saveUserMenus", { content: currentMenus.value });
+  }
 };
 
-const handleCurrentItemClick = (data: any) => {
-  newMenus = data;
+// 监听当前列表的点击事件 (删除)
+const handleCurrentItemClick = (item: any) => {
+  currentMenus.value = currentMenus.value.filter(
+    (menu: any) => menu.id !== item.id
+  );
 };
 
+const maxLength = 11;
+
+// 监听全部列表的点击事件 (添加)
 const handleItemClick = (item: any) => {
-  console.log(item);
+  // 1. 判断是否大于maxLength
+  if (currentMenus.value.length >= maxLength) {
+    uni.showToast({
+      title: "最多只能添加11个",
+      icon: "none",
+    });
+    return;
+  }
+  // 2. 查找当前列表中是否有该项
+  const hasItem = currentMenus.value.find((menu: any) => menu.id === item.id);
+  if (hasItem) {
+    uni.showToast({
+      title: "已经添加过了",
+      icon: "none",
+    });
+    return;
+  }
+  // 3. 添加
+  currentMenus.value.push(item);
 };
 </script>
 

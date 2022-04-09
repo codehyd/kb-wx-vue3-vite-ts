@@ -25,6 +25,7 @@
         ></h-input>
 
         <button class="loginBtn" @click="handleBtnClick">登录</button>
+
         <uni-popup :radius="14" ref="uniPopupRef" background-color="#fff">
           <view class="popupContent">
             <h-cell
@@ -48,7 +49,10 @@ import uniPopup from "@dcloudio/uni-ui/lib/uni-popup/uni-popup.vue";
 
 import useLogin from "@/utils/login";
 import useLoginHooks from "@/hooks/useLoginHooks";
-const { userInfo } = useLoginHooks();
+
+import type { IAcccountType } from "@/network/service/mine";
+
+const { userInfo, accountLogin } = useLoginHooks();
 
 const store = useStore();
 
@@ -107,7 +111,7 @@ const handleBtnClick = async () => {
     return;
   }
 
-  // 1. 先判断是否有微信缓存信息
+  // 先判断是否有微信缓存信息
   let nickname = uni.getStorageSync("nickName") ?? "";
   let avatarurl = uni.getStorageSync("avatarUrl") ?? "";
   let jscode = "";
@@ -127,12 +131,27 @@ const handleBtnClick = async () => {
   }
 
   function useLoginStore() {
-    store.dispatch("login/accountLogin", {
-      jscode,
+    const data: IAcccountType = {
+      csname: loginInfo.csname,
+      cnstr: loginInfo.csname,
+      uname: loginInfo.uname,
+      upwd: loginInfo.upwd,
+      sns: loginInfo.sns,
       nickname,
       avatarurl,
-      ...loginInfo,
-      ...{ cnstr: loginInfo.csname },
+      jscode,
+      appid: "wxbe6756ab2557a17b",
+    };
+    accountLogin(data, () => {
+      uni.showToast({
+        title: "登录成功跳转中",
+        icon: "success",
+      });
+      setTimeout(() => {
+        uni.reLaunch({
+          url: "/pages/index/index",
+        });
+      }, 1500);
     });
   }
 };
