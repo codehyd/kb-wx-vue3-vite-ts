@@ -67,7 +67,9 @@ const handleMoreClick = () => {
 <style lang="less" scoped>
 .page-work-list {
   position: relative;
-  margin: 0 20rpx;
+  padding: 0 20rpx;
+  background-color: #fff;
+
   .item {
     flex: 1;
     display: flex;
